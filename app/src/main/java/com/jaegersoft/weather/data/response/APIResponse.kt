@@ -8,4 +8,4 @@ import com.jaegersoft.weather.data.response.components.Request
 data class APIResponse(var request : Request,
                        var location : Location,
                        var current : Current,
-                       var forecast : Forecast?)
+                       var forecast : List<Forecast>?)
