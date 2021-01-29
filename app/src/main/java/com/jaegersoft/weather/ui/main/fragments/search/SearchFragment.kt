@@ -29,9 +29,7 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.search_fragment, container, false)
-
-        viewModel.setStateEvent(WeatherSearchStateEvent.GetCurrent, "New York")
-
+        viewModel.setStateEvent(WeatherSearchStateEvent.GetForecast, "Tokyo")
         return binding.root
     }
 }

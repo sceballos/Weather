@@ -10,15 +10,24 @@ import java.lang.Exception
 
 class WeatherRepository
 constructor(
-    private val retrofitContent : ContentInterface,
-){
+    private val retrofitContent : ContentInterface) {
+
     suspend fun getCurrent(query : String) : Flow<DataState<WeatherAPIResponse>> = flow{
         emit(DataState.Loading)
         try {
-            //val networkResponse = retrofitContent.getCurrent(query)
-            val networkResponse = retrofitContent.getCurrentTest()
+            val networkResponse = retrofitContent.requestCurrent(query)
             Log.e("TAG", "getCurrent: $networkResponse", )
-            //val response = entityMapper.mapFromEntity(networkResponse)
+            emit(DataState.Success(networkResponse))
+        } catch (e : Exception) {
+            emit(DataState.Error(e))
+        }
+    }
+
+    suspend fun getForecast(query : String) : Flow<DataState<WeatherAPIResponse>> = flow{
+        emit(DataState.Loading)
+        try {
+            val networkResponse = retrofitContent.requestForecast(query)
+            Log.e("TAG", "getForecast: $networkResponse", )
             emit(DataState.Success(networkResponse))
         } catch (e : Exception) {
             emit(DataState.Error(e))
