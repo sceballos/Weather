@@ -62,11 +62,11 @@ dependencies {
 
     // DI
     implementation "com.google.dagger:hilt-android:$hilt_version"
-    annotationProcessor "com.google.dagger:hilt-android-compiler:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_view_models"
     // When using Kotlin.
-    annotationProcessor "androidx.hilt:hilt-compiler:$hilt_view_models"
+    kapt "androidx.hilt:hilt-compiler:$hilt_view_models"
 
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
