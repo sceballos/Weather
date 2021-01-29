@@ -1,4 +1,6 @@
 package com.jaegersoft.weather.data.response.components
 
-class Request {
-}
+data class Request(var type : String,
+                   var query : String,
+                   var language : String,
+                   var unit : String)
