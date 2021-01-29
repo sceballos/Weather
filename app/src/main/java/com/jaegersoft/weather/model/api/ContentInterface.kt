@@ -7,12 +7,6 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface ContentInterface {
-    //@FormUrlEncoded
-    //@GET("/current?access_key=${RetrofitModule.acessKey}")
-    //suspend fun getCurrent(@Query("query") query: String?) : WeatherAPIResponse
-    //suspend fun getTest() : WeatherAPIResponse
-
-    @GET("/current?access_key=ba5c575b0cc8dd1fba40a13a3bf66bc2&query=New York")
-    //@GET("/testi")
+    @GET("/forecast?access_key=ba5c575b0cc8dd1fba40a13a3bf66bc2&query=New York")
     suspend fun getCurrentTest() : WeatherAPIResponse
 }
