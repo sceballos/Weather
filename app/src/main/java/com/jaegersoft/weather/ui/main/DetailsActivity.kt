@@ -50,7 +50,7 @@ class DetailsActivity : AppCompatActivity() {
             .centerCrop()
             .placeholder(R.drawable.ic_launcher_foreground)
             .into(binding.currentWeatherIv)
-        binding.currentTempTv.text = "${apiResponse.current.temperature.toString()} °"
+        binding.currentTempTv.text = "${apiResponse.current.temperature.toInt()}° C"
 
         if (apiResponse.forecastMap == null) {
             binding.emptyForecastTv.visibility = View.VISIBLE

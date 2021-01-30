@@ -56,9 +56,7 @@ class MainActivity : AppCompatActivity() {
                     viewModel.fillForecastDummyData()
                     viewModel.addRecentSearch(dataState.data)
                     showProgressBar(false)
-                    val intent = Intent(this, DetailsActivity::class.java)
-                    intent.putExtra("api_response", dataState.data)
-                    startActivity(intent)
+                    startDetailsActivity(dataState.data)
                 }
                 is DataState.Error -> {
                     Log.e("MainActivity", "onCreateView: ERROR getting data")
@@ -81,7 +79,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.recentSearch.observe(this, { data ->
             Log.e("MainActivity", "onCreate: new data", )
             val adapter = RecentSearchAdapter(data, this) { item ->
-                openDetails(item)
+                startDetailsActivity(item)
             }
             binding.recentSearchRv.adapter = adapter
 
@@ -116,8 +114,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun openDetails(weatherAPIResponse: WeatherAPIResponse) {
-
+    private fun startDetailsActivity(weatherAPIResponse: WeatherAPIResponse) {
+        val intent = Intent(this, DetailsActivity::class.java)
+        intent.putExtra("api_response", weatherAPIResponse)
+        startActivity(intent)
     }
 
     private fun setupRecyclerView() {

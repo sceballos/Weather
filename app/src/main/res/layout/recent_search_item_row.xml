@@ -22,32 +22,45 @@
         android:id="@+id/recent_search_city_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="56dp"
+        android:layout_marginStart="16dp"
+        android:gravity="center"
         android:text="City"
-        app:layout_constraintBottom_toBottomOf="@+id/recent_search_current_condition_iv"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/constraintLayout"
         app:layout_constraintStart_toEndOf="@+id/recent_search_current_condition_iv"
-        app:layout_constraintTop_toTopOf="@+id/recent_search_current_condition_iv" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/recent_search_current_temperature_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:text="Day"
-        app:layout_constraintBottom_toBottomOf="@+id/recent_search_city_tv"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="100dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recent_search_current_condition_tv" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/recent_search_current_condition_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:text="Day"
-        app:layout_constraintBottom_toTopOf="@+id/recent_search_current_temperature_iv"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/recent_search_city_tv" />
+        <TextView
+            android:id="@+id/recent_search_current_condition_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Day"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/recent_search_current_temperature_iv"
+            app:layout_constraintStart_toStartOf="@+id/recent_search_current_temperature_iv"
+            app:layout_constraintTop_toBottomOf="@+id/recent_search_current_temperature_iv" />
+
+        <TextView
+            android:id="@+id/recent_search_current_temperature_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="Day"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.jaegersoft.weather.R
 import com.jaegersoft.weather.data.response.Forecast
+import com.jaegersoft.weather.util.WeatherAssets
 import kotlinx.android.synthetic.main.forecast_item_row.view.*
 
 
@@ -28,16 +29,15 @@ class ForecastAdapter(private val data: List<Pair<String, Forecast>>,
         val forecast = data[position].second
 
         holder.day.text = forecast.date
-        holder.maxTemp.text = forecast.maxtemp.toString()
+        holder.maxTemp.text = "${forecast.maxtemp.toInt()}° C"
 
         if (context != null) {
             Glide.with(context)
-                .load("https://assets.weatherstack.com/images/wsymbols01_png_64/wsymbol_0001_sunny.png") //API does not provide icons for forecast days
-                .centerCrop()
+                .load(WeatherAssets.assetsMap[(0..WeatherAssets.assetsMap.lastIndex).random()]) //API does not provide icons for forecast days
+                .fitCenter()
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .into(holder.icon)
         }
-
 
         holder.itemView.setOnClickListener { clickListener(data[position]) }
     }

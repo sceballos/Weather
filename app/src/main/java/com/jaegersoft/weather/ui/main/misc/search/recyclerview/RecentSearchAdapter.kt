@@ -30,7 +30,7 @@ class RecentSearchAdapter(private val data: List<WeatherAPIResponse>,
         if (context != null) {
             Glide.with(context)
                 .load(search.current.weatherIcons[0]) //API does not provide icons for forecast days
-                .centerCrop()
+                .fitCenter()
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .into(holder.iconCondition)
         }
@@ -39,7 +39,7 @@ class RecentSearchAdapter(private val data: List<WeatherAPIResponse>,
 
         holder.currentConditionText.text = search.current.weatherDescriptions[0]
 
-        holder.currentTemperature.text = search.current.temperature.toString()
+        holder.currentTemperature.text = "${search.current.temperature.toInt()}° C"
 
         holder.itemView.setOnClickListener { clickListener(data[position]) }
     }
