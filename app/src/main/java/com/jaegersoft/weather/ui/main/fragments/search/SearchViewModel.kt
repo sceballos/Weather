@@ -1,5 +1,6 @@
 package com.jaegersoft.weather.ui.main.fragments.search
 
+import android.util.Log
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
@@ -26,13 +27,15 @@ SearchViewModel
         viewModelScope.launch {
             when(dataState) {
                 is WeatherSearchStateEvent.GetCurrent -> {
+                    Log.e("TAG", "GetCurrent", )
                     weatherRepository.getCurrent(query).onEach { dataState ->
                         _dataState.value = dataState
                     }.launchIn(viewModelScope)
                 }
-
                 is WeatherSearchStateEvent.GetForecast -> {
+                    Log.e("TAG", "GetForecast", )
                     weatherRepository.getForecast(query).onEach { dataState ->
+                        Log.e("TAG", "setStateEvent: viewmodel INSIDE", )
                         _dataState.value = dataState
                     }.launchIn(viewModelScope)
                 }

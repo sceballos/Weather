@@ -1,6 +1,7 @@
 package com.jaegersoft.weather.ui.main.fragments.search
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -29,7 +30,14 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.search_fragment, container, false)
-        viewModel.setStateEvent(WeatherSearchStateEvent.GetForecast, "Tokyo")
+
+        binding.searchBtn.setOnClickListener {
+            Log.e("TAG", "onCreateView: ${binding.cityEt.text.toString()} ", )
+            viewModel.setStateEvent(WeatherSearchStateEvent.GetForecast, binding.cityEt.text.toString())
+        }
+
+
+
         return binding.root
     }
 }

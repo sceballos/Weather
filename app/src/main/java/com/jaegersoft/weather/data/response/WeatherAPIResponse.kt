@@ -55,7 +55,7 @@ data class Location(
 
     @SerializedName("localtime_epoch")
     @Expose
-    var localtimeEpoch: Int,
+    var localtimeEpoch: Long,
 
     @SerializedName("lon")
     @Expose
@@ -81,15 +81,15 @@ data class Location(
 data class Current(
     @SerializedName("cloudcover")
     @Expose
-    var cloudcover: Int,
+    var cloudcover: Double,
 
     @SerializedName("feelslike")
     @Expose
-    var feelslike: Int,
+    var feelslike: Double,
 
     @SerializedName("humidity")
     @Expose
-    var humidity: Int,
+    var humidity: Double,
 
     @SerializedName("is_day")
     @Expose
@@ -101,27 +101,27 @@ data class Current(
 
     @SerializedName("precip")
     @Expose
-    var precip: Int,
+    var precip: Double,
 
     @SerializedName("pressure")
     @Expose
-    var pressure: Int,
+    var pressure: Double,
 
     @SerializedName("temperature")
     @Expose
-    var temperature: Int,
+    var temperature: Double,
 
     @SerializedName("uv_index")
     @Expose
-    var uvIndex: Int,
+    var uvIndex: Double,
 
     @SerializedName("visibility")
     @Expose
-    var visibility: Int,
+    var visibility: Double,
 
     @SerializedName("weather_code")
     @Expose
-    var weatherCode: Int,
+    var weatherCode: Double,
 
     @SerializedName("weather_descriptions")
     @Expose
@@ -133,7 +133,7 @@ data class Current(
 
     @SerializedName("wind_degree")
     @Expose
-    var windDegree: Int,
+    var windDegree: Double,
 
     @SerializedName("wind_dir")
     @Expose
@@ -141,7 +141,7 @@ data class Current(
 
     @SerializedName("wind_speed")
     @Expose
-    var windSpeed: Int
+    var windSpeed: Double
 )
 
 data class Forecast(
@@ -156,25 +156,25 @@ data class Forecast(
 
     @SerializedName("mintemp")
     @Expose
-    var mintemp: Int,
+    var mintemp: Double,
 
     @SerializedName("maxtemp")
     @Expose
-    var maxtemp: Int,
+    var maxtemp: Double,
 
     @SerializedName("avgtemp")
     @Expose
-    var avgtemp: Int,
+    var avgtemp: Double,
 
     @SerializedName("totalsnow")
     @Expose
-    var totalsnow: Int,
+    var totalsnow: Double,
 
     @SerializedName("sunhour")
     @Expose
-    var sunhour: Int,
+    var sunhour: Double,
 
     @SerializedName("uv_index")
     @Expose
-    var uvIndex: Int
+    var uvIndex: Double
 )

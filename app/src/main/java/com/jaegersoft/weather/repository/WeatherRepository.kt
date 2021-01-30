@@ -30,6 +30,8 @@ constructor(
             Log.e("TAG", "getForecast: $networkResponse", )
             emit(DataState.Success(networkResponse))
         } catch (e : Exception) {
+            Log.e("TAG", "getForecast: ERROR", )
+            Log.e("TAG", "$e", )
             emit(DataState.Error(e))
         }
     }

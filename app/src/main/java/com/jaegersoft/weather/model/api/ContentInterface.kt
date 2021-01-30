@@ -12,5 +12,5 @@ interface ContentInterface {
     suspend fun requestCurrent(@Query("query")  query: String?) : WeatherAPIResponse
 
     @GET("/forecast?access_key=${RetrofitModule.acessKey}")
-    suspend fun requestForecast(@Query("query")  query: String?) : WeatherAPIResponse
+    suspend fun requestForecast(@Query("query") query: String?) : WeatherAPIResponse
 }
