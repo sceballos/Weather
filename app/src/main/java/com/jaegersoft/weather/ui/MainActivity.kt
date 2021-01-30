@@ -1,38 +1,133 @@
 package com.jaegersoft.weather.ui
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.fragment.app.Fragment
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.jaegersoft.weather.R
-import com.jaegersoft.weather.ui.main.fragments.details.DetailsFragment
-import com.jaegersoft.weather.ui.main.fragments.search.DataUpdateListener
-import com.jaegersoft.weather.ui.main.fragments.search.SearchFragment
-import com.jaegersoft.weather.ui.main.fragments.search.WeatherViewModel
+import com.jaegersoft.weather.data.response.WeatherAPIResponse
+import com.jaegersoft.weather.databinding.ActivityMainBinding
+import com.jaegersoft.weather.ui.main.DetailsActivity
+import com.jaegersoft.weather.ui.main.misc.search.recyclerview.RecentSearchAdapter
+import com.jaegersoft.weather.util.DataState
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), DataUpdateListener {
+class MainActivity : AppCompatActivity() {
 
-    val viewModel: WeatherViewModel by viewModels()
+    private val viewModel: WeatherViewModel by viewModels()
+    private lateinit var binding : ActivityMainBinding
 
+    @ExperimentalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (savedInstanceState == null) {
-            loadFragment(SearchFragment.newInstance())
+        Log.e("MainActivity", "onCreateView: creating")
+
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        setupRecyclerView()
+
+        binding.searchBtn.setOnClickListener {
+
+            if (binding.cityEt.text.isEmpty()) {
+                Toast.makeText(this, "Please input the name of a city", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            viewModel.setStateEvent(
+                WeatherSearchStateEvent.GetForecast,
+                binding.cityEt.text.toString()
+            )
+        }
+
+        viewModel.dataState.observe(this, { dataState ->
+            Log.e("MainActivity", "onCreateView: observe dataState updated")
+            when (dataState) {
+                is DataState.Success<WeatherAPIResponse> -> {
+                    Log.e("MainActivity", "onCreateView: fragment transition to details")
+                    viewModel.fillForecastDummyData()
+                    viewModel.addRecentSearch(dataState.data)
+                    showProgressBar(false)
+                    val intent = Intent(this, DetailsActivity::class.java)
+                    intent.putExtra("api_response", dataState.data)
+                    startActivity(intent)
+                }
+                is DataState.Error -> {
+                    Log.e("MainActivity", "onCreateView: ERROR getting data")
+                    showProgressBar(false)
+                    Toast.makeText(this, dataState.exception, Toast.LENGTH_SHORT).show()
+                }
+                DataState.Loading -> {
+                    Log.e("MainActivity", "onCreateView: update ui")
+                    showProgressBar(true)
+                }
+            }
+        })
+
+        if (viewModel.recentSearch.value?.size == 0) {
+            showEmptySearchesMessage(true)
+        } else {
+            showEmptySearchesMessage(false)
+        }
+
+        viewModel.recentSearch.observe(this, { data ->
+            Log.e("MainActivity", "onCreate: new data", )
+            val adapter = RecentSearchAdapter(data, this) { item ->
+                openDetails(item)
+            }
+            binding.recentSearchRv.adapter = adapter
+
+            if (viewModel.recentSearch.value?.size == 0) {
+                showEmptySearchesMessage(true)
+            } else {
+                showEmptySearchesMessage(false)
+            }
+
+            binding.invalidateAll()
+        })
+    }
+
+
+    private fun showEmptySearchesMessage(show : Boolean) {
+        if (show) {
+            binding.recentSearchRv.visibility = View.INVISIBLE
+            binding.emptySearchesTv.visibility = View.VISIBLE
+        } else {
+            binding.recentSearchRv.visibility = View.VISIBLE
+            binding.emptySearchesTv.visibility = View.INVISIBLE
         }
     }
 
-    private fun loadFragment(fragment : Fragment) : Boolean {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.main_fragment_container, fragment)
-            .commitNow()
-        return true
+    private fun showProgressBar(show : Boolean) {
+        if (show) {
+            binding.weatherRequestPb.visibility = View.VISIBLE
+            binding.searchBtn.visibility = View.INVISIBLE
+        } else {
+            binding.weatherRequestPb.visibility = View.INVISIBLE
+            binding.searchBtn.visibility = View.VISIBLE
+        }
     }
 
-    override fun onDataUpdate() {
-        loadFragment(DetailsFragment.newInstance())
+    private fun openDetails(weatherAPIResponse: WeatherAPIResponse) {
+
     }
+
+    private fun setupRecyclerView() {
+        binding.recentSearchRv.layoutManager = LinearLayoutManager(this)
+        binding.recentSearchRv.setHasFixedSize(false)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.e("TAG", "onDestroy: MAIN", )
+    }
+
 }

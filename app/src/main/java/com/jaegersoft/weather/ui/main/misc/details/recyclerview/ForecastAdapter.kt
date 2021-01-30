@@ -1,4 +1,4 @@
-package com.jaegersoft.weather.ui.main.fragments.details.recyclerview
+package com.jaegersoft.weather.ui.main.misc.details.recyclerview
 
 import android.content.Context
 import android.view.LayoutInflater

@@ -1,4 +1,4 @@
-package com.jaegersoft.weather.ui.main.fragments.search
+package com.jaegersoft.weather.ui
 
 import android.util.Log
 import androidx.hilt.Assisted
@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.collections.HashMap
-import kotlin.random.Random.Default.nextInt
 
 
 class
@@ -25,20 +24,22 @@ WeatherViewModel
     @Assisted private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
+    private val _recentSearch = MutableLiveData<MutableList<WeatherAPIResponse>>()
+    val recentSearch : LiveData<MutableList<WeatherAPIResponse>>
+        get() = _recentSearch
+
     private val _dataState = MutableLiveData<DataState<WeatherAPIResponse>>()
     val dataState : LiveData<DataState<WeatherAPIResponse>>
         get() = _dataState
+
+    init {
+        _recentSearch.value = mutableListOf()
+    }
 
     @ExperimentalCoroutinesApi
     fun setStateEvent(dataState: WeatherSearchStateEvent, query: String) {
         viewModelScope.launch {
             when(dataState) {
-                is WeatherSearchStateEvent.GetCurrent -> {
-                    Log.e("TAG", "GetCurrent")
-                    weatherRepository.getCurrent(query).onEach { dataState ->
-                        _dataState.value = dataState
-                    }.launchIn(viewModelScope)
-                }
                 is WeatherSearchStateEvent.GetForecast -> {
                     Log.e("TAG", "GetForecast")
                     weatherRepository.getForecast(query).onEach { dataState ->
@@ -50,11 +51,28 @@ WeatherViewModel
         }
     }
 
-    fun fillForecastDummyData(response: WeatherAPIResponse) {
+    fun addRecentSearch(response : WeatherAPIResponse) {
+        val temp = _recentSearch.value
+        temp?.let {
+            it.add(response)
+            it.reverse()
+            it.distinctBy {
+                response
+            }
+        }
 
+        _recentSearch.value = temp
+    }
+
+    fun fillForecastDummyData() {
         when (_dataState.value) {
             is DataState.Success<WeatherAPIResponse> -> {
+
                 val resultMap = HashMap<String, Forecast>()
+
+                if ((_dataState.value as DataState.Success<WeatherAPIResponse>).data.forecastMap == null) {
+                    return
+                }
 
                 for (i in 1..6) {
                     val baseDate = LocalDate.parse(
@@ -88,6 +106,5 @@ WeatherViewModel
 }
 
 sealed class WeatherSearchStateEvent {
-    object GetCurrent : WeatherSearchStateEvent()
     object GetForecast : WeatherSearchStateEvent()
 }

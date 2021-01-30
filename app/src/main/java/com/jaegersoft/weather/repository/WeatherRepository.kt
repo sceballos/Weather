@@ -12,27 +12,20 @@ class WeatherRepository
 constructor(
     private val retrofitContent : ContentInterface) {
 
-    suspend fun getCurrent(query : String) : Flow<DataState<WeatherAPIResponse>> = flow{
-        emit(DataState.Loading)
-        try {
-            val networkResponse = retrofitContent.requestCurrent(query)
-            Log.e("TAG", "getCurrent: $networkResponse", )
-            emit(DataState.Success(networkResponse))
-        } catch (e : Exception) {
-            emit(DataState.Error(e))
-        }
-    }
-
     suspend fun getForecast(query : String) : Flow<DataState<WeatherAPIResponse>> = flow{
         emit(DataState.Loading)
         try {
             val networkResponse = retrofitContent.requestForecast(query)
-            Log.e("TAG", "getForecast: $networkResponse", )
+            Log.e("WeatherRepository : success", "getForecast: $networkResponse", )
+
+            if (networkResponse.error != null) {
+                emit(DataState.Error("Couldn't process the request. Try again"))
+                return@flow
+            }
             emit(DataState.Success(networkResponse))
         } catch (e : Exception) {
-            Log.e("TAG", "getForecast: ERROR", )
-            Log.e("TAG", "$e", )
-            emit(DataState.Error(e))
+            Log.e("WeatherRepository", "$e", )
+            emit(DataState.Error("The request failed"))
         }
     }
 }

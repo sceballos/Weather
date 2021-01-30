@@ -6,7 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.main.fragments.details.DetailsFragment">
+        tools:context=".ui.main.DetailsActivity">
 
         <TextView
             android:id="@+id/city_tv"
@@ -38,8 +38,7 @@
             app:layout_constraintStart_toStartOf="@+id/current_weather_iv"
             app:layout_constraintTop_toBottomOf="@+id/current_weather_iv" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/forecast_rv"
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="16dp"
@@ -48,7 +47,23 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/current_temp_tv" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toBottomOf="@+id/current_temp_tv">
 
+
+        <TextView
+            android:id="@+id/empty_forecast_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:gravity="center"
+            android:text="No forecast available"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/forecast_rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

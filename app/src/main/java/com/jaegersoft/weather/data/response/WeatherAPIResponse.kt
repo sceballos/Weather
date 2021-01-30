@@ -1,9 +1,12 @@
 package com.jaegersoft.weather.data.response
 
 
+import android.os.Parcelable
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class WeatherAPIResponse(
     @SerializedName("request")
     @Expose
@@ -19,9 +22,15 @@ data class WeatherAPIResponse(
 
     @SerializedName("forecast")
     @Expose
-    var forecastMap : Map<String, Forecast>?
-)
+    var forecastMap : Map<String, Forecast>?,
 
+    @SerializedName("error")
+    @Expose
+    var error: Error?
+
+) : Parcelable
+
+@Parcelize
 data class Request(
     @SerializedName("type")
     @Expose
@@ -38,8 +47,10 @@ data class Request(
     @SerializedName("unit")
     @Expose
     var unit : String,
-)
 
+) : Parcelable
+
+@Parcelize
 data class Location(
     @SerializedName("country")
     @Expose
@@ -76,8 +87,10 @@ data class Location(
     @SerializedName("utc_offset")
     @Expose
     var utcOffset: String
-)
 
+) : Parcelable
+
+@Parcelize
 data class Current(
     @SerializedName("cloudcover")
     @Expose
@@ -142,8 +155,10 @@ data class Current(
     @SerializedName("wind_speed")
     @Expose
     var windSpeed: Double
-)
 
+) : Parcelable
+
+@Parcelize
 data class Forecast(
 
     @SerializedName("date")
@@ -177,4 +192,21 @@ data class Forecast(
     @SerializedName("uv_index")
     @Expose
     var uvIndex: Double
-)
+
+) : Parcelable
+
+@Parcelize
+data class Error(
+    @SerializedName("code")
+    @Expose
+    var code: Int,
+
+    @SerializedName("type")
+    @Expose
+    var type: String,
+
+    @SerializedName("info")
+    @Expose
+    var info: String
+
+) : Parcelable
