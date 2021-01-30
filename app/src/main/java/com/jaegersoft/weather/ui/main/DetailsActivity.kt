@@ -50,6 +50,46 @@ class DetailsActivity : AppCompatActivity() {
             .centerCrop()
             .placeholder(R.drawable.ic_launcher_foreground)
             .into(binding.currentWeatherIv)
+
+        val weatherDescription = apiResponse.current.weatherDescriptions[0].toLowerCase()
+        val isDay = apiResponse.current.isDay == "yes"
+
+        when {
+            weatherDescription.contains("sunny") || weatherDescription.contains("clear") -> {
+                if (isDay) {
+                    binding.detailsBackground.setImageResource(R.drawable.sunny_day_bg)
+                } else {
+                    binding.detailsBackground.setImageResource(R.drawable.clear_night_bg)
+                }
+            }
+
+            weatherDescription.contains("snow") -> {
+                if (isDay) {
+                    binding.detailsBackground.setImageResource(R.drawable.snow_bg_day_alt)
+                } else {
+                    binding.detailsBackground.setImageResource(R.drawable.snow_bg_night)
+                }
+            }
+
+            weatherDescription.contains("cloud") -> {
+                if (isDay) {
+                    binding.detailsBackground.setImageResource(R.drawable.cloud_day_bg)
+                } else {
+                    binding.detailsBackground.setImageResource(R.drawable.cloud_night_bg)
+                }
+            }
+
+            weatherDescription.contains("overcast") -> {
+                binding.detailsBackground.setImageResource(R.drawable.overcast_bg)
+            }
+
+            weatherDescription.contains("mist") || weatherDescription.contains("haze") || weatherDescription.contains("rain") -> {
+                binding.detailsBackground.setImageResource(R.drawable.mist_bg)
+            }
+
+            else -> Log.e("weather background", "updateUI: use default", )
+        }
+
         binding.currentTempTv.text = "${apiResponse.current.temperature.toInt()}° C"
 
         binding.conditionTv.text = "${apiResponse.current.weatherDescriptions[0]}"
