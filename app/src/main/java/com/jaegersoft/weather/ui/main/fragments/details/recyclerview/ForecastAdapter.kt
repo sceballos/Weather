@@ -27,7 +27,7 @@ class ForecastAdapter(private val data: List<Pair<String, Forecast>>,
     override fun onBindViewHolder(holder: ForecastViewHolder, position: Int) {
         val forecast = data[position].second
 
-        holder.day.text = "Tomorrow"
+        holder.day.text = forecast.date
         holder.maxTemp.text = forecast.maxtemp.toString()
 
         if (context != null) {

@@ -12,30 +12,37 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import kotlin.collections.HashMap
+import kotlin.random.Random.Default.nextInt
+
 
 class
 WeatherViewModel
-@ViewModelInject constructor(private val weatherRepository: WeatherRepository,
-@Assisted private val savedStateHandle: SavedStateHandle) : ViewModel() {
+@ViewModelInject constructor(
+    private val weatherRepository: WeatherRepository,
+    @Assisted private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
 
     private val _dataState = MutableLiveData<DataState<WeatherAPIResponse>>()
     val dataState : LiveData<DataState<WeatherAPIResponse>>
         get() = _dataState
 
     @ExperimentalCoroutinesApi
-    fun setStateEvent(dataState : WeatherSearchStateEvent, query : String) {
+    fun setStateEvent(dataState: WeatherSearchStateEvent, query: String) {
         viewModelScope.launch {
             when(dataState) {
                 is WeatherSearchStateEvent.GetCurrent -> {
-                    Log.e("TAG", "GetCurrent", )
+                    Log.e("TAG", "GetCurrent")
                     weatherRepository.getCurrent(query).onEach { dataState ->
                         _dataState.value = dataState
                     }.launchIn(viewModelScope)
                 }
                 is WeatherSearchStateEvent.GetForecast -> {
-                    Log.e("TAG", "GetForecast", )
+                    Log.e("TAG", "GetForecast")
                     weatherRepository.getForecast(query).onEach { dataState ->
-                        Log.e("TAG", "setStateEvent: viewmodel INSIDE", )
+                        Log.e("TAG", "setStateEvent: viewmodel INSIDE")
                         _dataState.value = dataState
                     }.launchIn(viewModelScope)
                 }
@@ -43,17 +50,38 @@ WeatherViewModel
         }
     }
 
-    fun fillForecastDummyData(response : WeatherAPIResponse) {
+    fun fillForecastDummyData(response: WeatherAPIResponse) {
 
         when (_dataState.value) {
             is DataState.Success<WeatherAPIResponse> -> {
                 val resultMap = HashMap<String, Forecast>()
 
-                for (i in 0..5) {
-                    resultMap.put(i.toString(), Forecast("", 0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0))
+                for (i in 1..6) {
+                    val baseDate = LocalDate.parse(
+                        (_dataState.value as DataState.Success<WeatherAPIResponse>).data.forecastMap?.toList()
+                            ?.get(0)?.first.toString()
+                    )
+
+                    val dummyIndexDate = baseDate.plusDays(i.toLong())
+                    val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("EEEE")
+                    val dummyDateString: String = dummyIndexDate.format(formatter)
+
+                    resultMap.put(
+                        i.toString(), Forecast(
+                            dummyDateString,
+                            0,
+                            0.0,
+                            (1..15).random().toDouble(),
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        )
+                    )
                 }
 
-                (_dataState.value as DataState.Success<WeatherAPIResponse>).data.forecastMap = resultMap
+                (_dataState.value as DataState.Success<WeatherAPIResponse>).data.forecastMap =
+                    resultMap
             }
         }
     }
