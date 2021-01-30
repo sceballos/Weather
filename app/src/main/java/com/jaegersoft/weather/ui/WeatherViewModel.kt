@@ -8,6 +8,7 @@ import com.jaegersoft.weather.data.response.Forecast
 import com.jaegersoft.weather.data.response.WeatherAPIResponse
 import com.jaegersoft.weather.repository.WeatherRepository
 import com.jaegersoft.weather.util.DataState
+import com.jaegersoft.weather.util.SingleLiveEvent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -28,7 +29,7 @@ WeatherViewModel
     val recentSearch : LiveData<MutableList<WeatherAPIResponse>>
         get() = _recentSearch
 
-    private val _dataState = MutableLiveData<DataState<WeatherAPIResponse>>()
+    private val _dataState = SingleLiveEvent<DataState<WeatherAPIResponse>>()
     val dataState : LiveData<DataState<WeatherAPIResponse>>
         get() = _dataState
 

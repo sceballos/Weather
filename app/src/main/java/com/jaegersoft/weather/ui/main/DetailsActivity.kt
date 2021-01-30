@@ -52,6 +52,14 @@ class DetailsActivity : AppCompatActivity() {
             .into(binding.currentWeatherIv)
         binding.currentTempTv.text = "${apiResponse.current.temperature.toInt()}° C"
 
+        binding.conditionTv.text = "${apiResponse.current.weatherDescriptions[0]}"
+
+        binding.windSpeedTv.text = "${apiResponse.current.windSpeed.toInt()} kmph"
+
+        binding.precipitationTv.text = "${apiResponse.current.precip.toInt()} %"
+
+        binding.cloudCoverTv.text = "${apiResponse.current.cloudcover.toInt()} %"
+
         if (apiResponse.forecastMap == null) {
             binding.emptyForecastTv.visibility = View.VISIBLE
             binding.forecastRv.visibility = View.GONE
