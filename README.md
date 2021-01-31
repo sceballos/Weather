@@ -1,6 +1,6 @@
 # Weather App
 
-> A simple Android weather app using MVI architecture
+> A simple Android weather app using MVI architecture. Please refer to app_test.apk file for quick testing
 
 ## Table of contents
 
