@@ -6,6 +6,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.jaegersoft.weather.data.response.Forecast
 import com.jaegersoft.weather.data.response.WeatherAPIResponse
+import com.jaegersoft.weather.di.APICachePreferences
 import com.jaegersoft.weather.repository.WeatherRepository
 import com.jaegersoft.weather.util.DataState
 import com.jaegersoft.weather.util.SingleLiveEvent
@@ -22,6 +23,7 @@ class
 WeatherViewModel
 @ViewModelInject constructor(
     private val weatherRepository: WeatherRepository,
+    private val apiCachePreferences: APICachePreferences,
     @Assisted private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -34,7 +36,8 @@ WeatherViewModel
         get() = _dataState
 
     init {
-        _recentSearch.value = mutableListOf()
+        _recentSearch.value = apiCachePreferences.getCachedResponses().toMutableList()
+        //_recentSearch.value = mutableListOf()
     }
 
     @ExperimentalCoroutinesApi
@@ -60,8 +63,8 @@ WeatherViewModel
             it.distinctBy {
                 response
             }
+            apiCachePreferences.setCachedResponses(it.toList())
         }
-
         _recentSearch.value = temp
     }
 
