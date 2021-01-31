@@ -13,6 +13,7 @@ import com.jaegersoft.weather.data.response.WeatherAPIResponse
 import com.jaegersoft.weather.databinding.ActivityDetailsBinding
 import com.jaegersoft.weather.ui.WeatherViewModel
 import com.jaegersoft.weather.ui.main.misc.details.recyclerview.ForecastAdapter
+import com.jaegersoft.weather.util.BitmapUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -30,8 +31,6 @@ class DetailsActivity : AppCompatActivity() {
         setupRecyclerView()
 
         val apiResponse = intent.getParcelableExtra<WeatherAPIResponse>("api_response")
-
-        Log.e("DetailsActivity", "details onCreate: $apiResponse", )
 
         apiResponse?.let {
             updateUI(it)
@@ -54,41 +53,7 @@ class DetailsActivity : AppCompatActivity() {
         val weatherDescription = apiResponse.current.weatherDescriptions[0].toLowerCase()
         val isDay = apiResponse.current.isDay == "yes"
 
-        when {
-            weatherDescription.contains("sunny") || weatherDescription.contains("clear") -> {
-                if (isDay) {
-                    binding.detailsBackground.setImageResource(R.drawable.sunny_day_bg)
-                } else {
-                    binding.detailsBackground.setImageResource(R.drawable.clear_night_bg)
-                }
-            }
-
-            weatherDescription.contains("snow") -> {
-                if (isDay) {
-                    binding.detailsBackground.setImageResource(R.drawable.snow_bg_day_alt)
-                } else {
-                    binding.detailsBackground.setImageResource(R.drawable.snow_bg_night)
-                }
-            }
-
-            weatherDescription.contains("cloud") -> {
-                if (isDay) {
-                    binding.detailsBackground.setImageResource(R.drawable.cloud_day_bg)
-                } else {
-                    binding.detailsBackground.setImageResource(R.drawable.cloud_night_bg)
-                }
-            }
-
-            weatherDescription.contains("overcast") -> {
-                binding.detailsBackground.setImageResource(R.drawable.overcast_bg)
-            }
-
-            weatherDescription.contains("mist") || weatherDescription.contains("haze") || weatherDescription.contains("rain") -> {
-                binding.detailsBackground.setImageResource(R.drawable.mist_bg)
-            }
-
-            else -> Log.e("weather background", "updateUI: use default", )
-        }
+        BitmapUtils.updateBackground(binding.detailsBackground ,weatherDescription, isDay)
 
         binding.currentTempTv.text = "${apiResponse.current.temperature.toInt()}° C"
 
@@ -115,6 +80,6 @@ class DetailsActivity : AppCompatActivity() {
     }
 
     private fun openForecast(forecast : Pair<String, Forecast>) {
-
+        //TODO : implement if necessary
     }
 }

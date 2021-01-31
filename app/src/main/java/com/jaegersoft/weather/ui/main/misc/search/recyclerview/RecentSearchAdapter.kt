@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.jaegersoft.weather.R
 import com.jaegersoft.weather.data.response.WeatherAPIResponse
+import com.jaegersoft.weather.util.BitmapUtils
 import kotlinx.android.synthetic.main.recent_search_item_row.view.*
 
 
@@ -46,44 +47,11 @@ class RecentSearchAdapter(private val data: List<WeatherAPIResponse>,
         val weatherDescription = search.current.weatherDescriptions[0].toLowerCase()
         val isDay = search.current.isDay == "yes"
 
-        when {
-            weatherDescription.contains("sunny") || weatherDescription.contains("clear") -> {
-                if (isDay) {
-                    holder.itemBackground.setImageResource(R.drawable.sunny_day_bg)
-                } else {
-                    holder.itemBackground.setImageResource(R.drawable.clear_night_bg)
-                }
-            }
+        val textColor = BitmapUtils.updateBackground(holder.itemBackground, weatherDescription, isDay)
 
-            weatherDescription.contains("snow") -> {
-                if (isDay) {
-                    holder.itemBackground.setImageResource(R.drawable.snow_bg_day)
-                } else {
-                    holder.itemBackground.setImageResource(R.drawable.snow_bg_night)
-                    holder.city.setTextColor(Color.WHITE)
-                    holder.currentConditionText.setTextColor(Color.WHITE)
-                    holder.currentTemperature.setTextColor(Color.WHITE)
-                }
-            }
-
-            weatherDescription.contains("cloud") -> {
-                if (isDay) {
-                    holder.itemBackground.setImageResource(R.drawable.cloud_day_bg)
-                } else {
-                    holder.itemBackground.setImageResource(R.drawable.cloud_night_bg)
-                }
-            }
-
-            weatherDescription.contains("overcast") -> {
-                holder.itemBackground.setImageResource(R.drawable.overcast_bg)
-            }
-
-            weatherDescription.contains("mist") || weatherDescription.contains("haze") || weatherDescription.contains("rain")-> {
-                holder.itemBackground.setImageResource(R.drawable.mist_bg)
-            }
-
-            else -> Log.e("weather background", "updateUI: use default", )
-        }
+        holder.city.setTextColor(textColor)
+        holder.currentConditionText.setTextColor(textColor)
+        holder.currentTemperature.setTextColor(textColor)
 
         holder.itemView.setOnClickListener { clickListener(data[position]) }
     }

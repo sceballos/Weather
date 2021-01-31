@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.function.Predicate
 import kotlin.collections.HashMap
 
 
@@ -37,7 +38,6 @@ WeatherViewModel
 
     init {
         _recentSearch.value = apiCachePreferences.getCachedResponses().toMutableList()
-        //_recentSearch.value = mutableListOf()
     }
 
     @ExperimentalCoroutinesApi
@@ -57,15 +57,12 @@ WeatherViewModel
 
     fun addRecentSearch(response : WeatherAPIResponse) {
         val temp = _recentSearch.value
+
         temp?.let {
-            it.add(response)
-            it.reverse()
-            it.distinctBy {
-                response
-            }
+            it.add(0, response)
+            _recentSearch.value = it
             apiCachePreferences.setCachedResponses(it.toList())
         }
-        _recentSearch.value = temp
     }
 
     fun fillForecastDummyData() {
